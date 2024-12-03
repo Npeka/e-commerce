@@ -13,6 +13,11 @@ import (
 	"go-package/internal/middleware"
 
 	"github.com/gin-gonic/gin"
+
+	docs "go-package/docs"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func (s *Server) MapHandler(r *gin.Engine) error {
@@ -35,8 +40,10 @@ func (s *Server) MapHandler(r *gin.Engine) error {
 	// paymentGroup := v1.Group("/payment")
 	// adminGroup := v1.Group("/admin")
 
+	docs.SwaggerInfo.BasePath = "/api/v1"
 	authHttp.AuthRoutes(authGroup, authHandlers, middlewareManager)
 	productsHttp.ProductsRoutes(productsGroup, productsHandlers, middlewareManager)
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return nil
 }
